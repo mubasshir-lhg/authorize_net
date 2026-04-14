@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>IFrame Communicator</title>
+  </head>
+  <body>
+    <!--
+      Authorize.net loads this page inside a hidden iframe and navigates it
+      (via query string) to emit messages like:
+         ?action=successfulSave
+         ?action=cancel
+         ?action=transactResponse&response=...
+         ?action=resizeWindow&width=..&height=..
+      We forward these to the parent window via postMessage so React can react.
+      This file MUST be served from the SAME origin as the page that hosts the
+      payment iframe - that's why we put it in the Vite `public/` folder.
+    -->
+    <script>
+      (function () {
+        function parseQS() {
+          var qs = window.location.search.replace(/^\?/, '');
+          var out = {};
+          qs.split('&').forEach(function (pair) {
+            if (!pair) return;
+            var kv = pair.split('=');
+            out[decodeURIComponent(kv[0])] = decodeURIComponent((kv[1] || '').replace(/\+/g, ' '));
+          });
+          return out;
+        }
+        var params = parseQS();
+        if (window.parent) {
+          window.parent.postMessage(params, window.location.origin);
+        }
+      })();
+    </script>
+  </body>
+</html>
