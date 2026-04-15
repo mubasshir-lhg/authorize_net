@@ -1,4 +1,4 @@
-const BASE ='hhttps://9d7a-182-176-108-166.ngrok-free.app/payment';
+const BASE ='hhttps://9d7a-182-176-108-166.ngrok-free.app';
 
 async function post(path, body) {
   const r = await fetch(BASE + path, {
@@ -16,14 +16,8 @@ async function get(path) {
   return r.json();
 }
 
-// export const api = {
-//   createInvoice: (amount, description) => post('/create-invoice', { amount, description }),
-//   getPaymentToken: (invoiceId) => post('/get-payment-token', { invoiceId }),
-//   getInvoice: (id) => get(`/invoice/${id}`),
-// };
-
 export const api = {
-  getPaymentToken: ({ id, amount, description }) =>
-    post('/get-payment-token', { id, amount, description }),
+  createInvoice: (amount, description) => post('/create-invoice', { amount, description }),
+  getPaymentToken: (invoiceId) => post('/get-payment-token', { invoiceId }),
   getInvoice: (id) => get(`/invoice/${id}`),
 };

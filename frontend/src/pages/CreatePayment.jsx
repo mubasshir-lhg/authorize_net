@@ -67,32 +67,13 @@ export default function CreatePayment() {
     return () => window.removeEventListener('message', onMessage);
   }, [modal, navigate]);
 
-  // async function handlePay(e) {
-  //   e.preventDefault();
-  //   setError(null);
-  //   setLoading(true);
-  //   try {
-  //     const { invoiceId } = await api.createInvoice(Number(amount), description);
-  //     const { token, paymentPageUrl } = await api.getPaymentToken(invoiceId);
-  //     setModal({ token, invoiceId, paymentPageUrl });
-  //   } catch (err) {
-  //     setError(err.message || 'Failed to start payment');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
-
-   async function handlePay(e) {
+  async function handlePay(e) {
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
-      const id = 'INV-' + Date.now().toString(36).toUpperCase();
-      const { token, invoiceId, paymentPageUrl } = await api.getPaymentToken({
-        id,
-        amount: Number(amount),
-        description,
-      });
+      const { invoiceId } = await api.createInvoice(Number(amount), description);
+      const { token, paymentPageUrl } = await api.getPaymentToken(invoiceId);
       setModal({ token, invoiceId, paymentPageUrl });
     } catch (err) {
       setError(err.message || 'Failed to start payment');
